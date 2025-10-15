@@ -1,107 +1,145 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles/simple-grid.css">
-    <link rel="stylesheet" href="styles/main.css">
-    <style>
-        body {
-            overflow: hidden;
-            height: 100vh;
-            margin: 0;
-        }
-        .contact-icon {
-            width: 72px;
-            height: 72px;
-            object-fit: contain;
-            display: block;
-            flex-shrink: 0;
-            padding: 0;
-            margin: 0;
-        }
-        .contact-links {
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            position: relative;
-            padding: 20px 0;
-        }
-        .contact-background {
-            position: absolute;
-            width: 350px;
-            height: calc(100% + 40px);
-            top: -20px;
-            background: linear-gradient(180deg, 
-                rgba(255,255,255,0.1) 0%,
-                rgba(255,255,255,0.2) 50%,
-                rgba(255,255,255,0.1) 100%);
-            z-index: -1;
-            border-radius: 15px;
-        }
-        .contact-item {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 22px;
-            width: 350px;
-            text-decoration: none;
-        }
-        .contact-text {
-            color: white;
-            font-size: 24px;
-            display: block;
-            text-align: center;
-            width: 150px;
-        }
-    </style>
-</head>
-<body class="dark-background">
-    <div class="container" style="height: 100vh; max-height: 100vh;">
-        <nav class="row nav_bar">
-            <div class="col-4">
-                <a class="nav_link text-left" href="index.html">Home</a>
-            </div>
-        </nav>
+  <meta charset="UTF-8" />
+  <title>Contact</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: black;
+      color: white;
+      font-family: sans-serif;
+    }
 
-        <section class="row project_page_description">
-            <div class="col-12 center">
-                <div class="contact-links">
-                    <div class="contact-background"></div>
-                    <a href="https://bsky.app/profile/haohao-art.bsky.social" class="contact-item">
-                        <img src="images/bluesky icon.png" alt="Bluesky Icon" class="contact-icon">
-                        <span class="contact-text">Bluesky</span>
-                        <img src="images/bluesky icon.png" alt="Bluesky Icon" class="contact-icon">
-                    </a>
-                    <a href="mailto:haotian.xu@sjsu.edu" class="contact-item">
-                        <img src="images/gmail icon.png" alt="Email Icon" class="contact-icon">
-                        <span class="contact-text">Email</span>
-                        <img src="images/gmail icon.png" alt="Email Icon" class="contact-icon">
-                    </a>
-                    <a href="https://www.instagram.com/hao.x_art/" class="contact-item">
-                        <img src="images/instagram icon.png" alt="Instagram Icon" class="contact-icon">
-                        <span class="contact-text">Instagram</span>
-                        <img src="images/instagram icon.png" alt="Instagram Icon" class="contact-icon">
-                    </a>
-                    <a href="https://www.reddit.com/user/haohao_01/" class="contact-item">
-                        <img src="images/reddit icon.png" alt="Reddit Icon" class="contact-icon">
-                        <span class="contact-text">Reddit</span>
-                        <img src="images/reddit icon.png" alt="Reddit Icon" class="contact-icon">
-                    </a>
-                    <a href="https://www.tiktok.com/@hao.x_art" class="contact-item">
-                        <img src="images/tiktok icon.png" alt="TikTok Icon" class="contact-icon">
-                        <span class="contact-text">TikTok</span>
-                        <img src="images/tiktok icon.png" alt="TikTok Icon" class="contact-icon">
-                    </a>
-                </div>
-            </div>
-        </section>
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: black;
+      z-index: 1000;
+      padding: 20px 0;
+    }
+
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-left: 13.9%;
+      margin-right: 13.9%;
+    }
+
+    nav {
+      display: flex;
+      gap: 50px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    main {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      margin-top: 160px;
+      padding-bottom: 100px;
+    }
+
+    .contact-links {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      align-items: center;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      text-decoration: none;
+      color: white;
+      font-size: 24px;
+    }
+
+    .contact-icon {
+      width: 72px;
+      height: 72px;
+      object-fit: contain;
+    }
+
+    .contact-text {
+      width: 150px;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- ✧ Top Bar -->
+  <header>
+    <div class="nav-container">
+      <a href="/homePage.html" style="text-decoration: none; color: inherit;">
+        <div style="font-size: 32px; font-weight: bold;">Hao.X Art</div>
+      </a>
+      <nav>
+      <a href="/solo/solo.html"><div>Solo</div></a>
+        <a href="/collaboration/collaboration.html"><div>Collaborations</div></a>
+         <a href="/Exhibition/Exhibiton.html" style="text-decoration: none; color: inherit;"><div style="cursor: pointer;">Exhibition</div></a>
+        <a href="/contact.html" style="text-decoration: none; color: inherit;"><div style="cursor: pointer;">Contact</div></a>
+      </nav>
     </div>
+  </header>
+
+  <!-- ✧ Contact Links -->
+  <main>
+    <div class="contact-links">
+      <div style="color: white; font-size: 16px; text-align: center;">
+    Contact me
+  </div>
+      <form 
+      
+      action="https://formspree.io/f/manpaqkb" method="POST" style="width: 350px; display: flex; flex-direction: column; gap: 15px;">
+  <input type="text" name="name" placeholder="Your Name" required
+         style="padding: 10px; font-size: 16px; background-color: #111; color: white; border: 1px solid #444; border-radius: 5px;">
+  
+  <input type="email" name="email" placeholder="Your Email" required
+         style="padding: 10px; font-size: 16px; background-color: #111; color: white; border: 1px solid #444; border-radius: 5px;">
+  
+  <input type="text" name="subject" placeholder="Subject" required
+         style="padding: 10px; font-size: 16px; background-color: #111; color: white; border: 1px solid #444; border-radius: 5px;">
+  
+  <textarea name="message" placeholder="Your Message" rows="5" required
+            style="padding: 10px; font-size: 16px; background-color: #111; color: white; border: 1px solid #444; border-radius: 5px;"></textarea>
+  
+  <button type="submit"
+          style="padding: 10px; font-size: 16px; background-color: white; color: black; border: none; border-radius: 5px; cursor: pointer;">
+    Send Message
+  </button>
+  
+  
+</form>
+
+
+      </a>
+      <a href="https://www.instagram.com/hao.x_art/" class="contact-item" target="_blank">
+        <img src="images/instagram icon.png" alt="Instagram Icon" class="contact-icon">
+        <span class="contact-text">Instagram</span>
+        <img src="images/instagram icon.png" alt="Instagram Icon" class="contact-icon">
+      </a>
+      
+      <a href="https://www.ko-fi.com/hxart012" class="contact-item" target="_blank">
+        <img src="images/ko-fi.png" alt="ko-fi" class="contact-icon">
+        <span class="contact-text">Ko-fi</span>
+        <img src="images/ko-fi.png" alt="ko-fi" class="contact-icon">
+      </a>
+    </div>
+  </main>
 </body>
-</html> 
+<footer style="margin: 5vh 0 5vh 0; text-align: center; font-size: 12px; font-weight: 300; color: #aaa;">
+  © 2025 Hao.X_Art All images and content are the property of the artist. Unauthorized use or reproduction of any artwork or content is prohibited.
+</footer>
+</html>

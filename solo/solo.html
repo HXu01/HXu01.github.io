@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Hao.X Gallery</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    :root {
+      --bg: #000;
+      --panel: rgba(10, 10, 10, 1); /* 80% opacity */
+      --panel-border: transparent;    /* removes white stroke */
+      --text: #fff;
+      --header-padding: 20px 0;
+      --content-margin: 10vh;
+      --thumb-size: 400px;
+      --popup-max-width: 1400px;
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: sans-serif;
+    }
+
+    /* Header */
+    .site-header {
+      position: fixed;
+      inset: 0 0 auto 0;
+      width: 100%;
+      background: var(--bg);
+      z-index: 1000;
+      padding: var(--header-padding);
+    }
+    .site-header__inner {
+      margin: 0 13.9%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .site-title { font-size: 32px; font-weight: 700; color: var(--text); text-decoration: none; }
+    .nav-links { display: flex; gap: 50px; align-items: center; }
+    .nav-links a, .nav-links div { color: inherit; text-decoration: none; cursor: pointer; }
+
+    .header-spacer { height: 80px; }
+
+    /* Page title */
+    .page-title {
+      text-align: center;
+      font-size: 64px;
+      font-weight: 700;
+      margin-top: var(--content-margin);
+      color: var(--text);
+    }
+
+    /* Gallery */
+    .gallery {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 25px;
+      margin-top: var(--content-margin);
+      flex-wrap: wrap;
+    }
+    .thumb {
+      cursor: pointer;
+    }
+    .thumb__box {
+      position: relative;
+      width: var(--thumb-size);
+      height: var(--thumb-size);
+      overflow: hidden;
+      display: block;
+      background: #000;
+    }
+    .thumb__img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      user-select: none;
+    }
+    .thumb__overlay {
+      position: absolute;
+      inset: 0;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text);
+      background-color: rgba(0,0,0,0);
+      opacity: 0;
+      transition: background-color .3s ease, opacity .3s ease;
+      user-select: none;
+    }
+    .thumb__box:hover .thumb__overlay {
+      background-color: rgba(0,0,0,0.6);
+      opacity: 1;
+    }
+
+    /* Popup */
+    #popupGallery {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0,0,0,0.95);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+    #popupBox {
+      position: relative;
+      width: 90%;
+      max-width: var(--popup-max-width);
+      background-color: var(--panel);
+      border: 1px solid var(--panel-border); 
+      padding: 20px 40px 40px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 1000;
+      margin-top: 80px;
+    }
+    #popupTitle { color: var(--text); font-size: 32px; margin: 0 0 10px 0; }
+
+    #popupContent {
+      width: 100%;
+      height: 600px;
+      box-sizing: border-box;
+    }
+
+    /* Popup nav hit zones (keeps same visual behavior) */
+    .popup-nav {
+      position: absolute;
+      top: 0;
+      width: 80px;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: background-color .3s ease;
+    }
+    .popup-nav--left { left: -80px; }
+    .popup-nav--right { right: -80px; }
+    .popup-nav:hover { background-color: rgba(255,255,255,0.05); }
+    .triangle-left, .triangle-right {
+      width: 0;
+      height: 0;
+    }
+    .triangle-left {
+      border-top: 20px solid transparent;
+      border-bottom: 20px solid transparent;
+      border-right: 30px solid white;
+    }
+    .triangle-right {
+      border-top: 20px solid transparent;
+      border-bottom: 20px solid transparent;
+      border-left: 30px solid white;
+    }
+
+    /* Utility */
+    .hidden { display: none !important; }
+
+   /* Dominium Cras hover effect */
+.popup-hover-dominium img {
+  transition: transform 0.3s ease, z-index 0.3s ease;
+  z-index: 1;
+}
+.popup-hover-dominium img:hover {
+  transform: scale(1.3); /* stronger zoom */
+  z-index: 10;
+}
+
+/* 2D hover effect */
+.popup-hover-2d img {
+  transition: transform 0.3s ease, z-index 0.3s ease;
+  z-index: 1;
+}
+.popup-hover-2d img:hover {
+  transform: scale(1.2); /* gentler zoom */
+  z-index: 10;
+}
+
+
+  </style>
+
+  <script>
+    // disable context menu globally
+    document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+  </script>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header" role="banner">
+    <div class="site-header__inner">
+      <a href="/homePage.html" class="site-title">Hao.X Art</a>
+      <nav class="nav-links" role="navigation" aria-label="Main">
+        <a href="/solo/solo.html">Solo</a>
+        <a href="/collaboration/collaboration.html">Collaborations</a>
+        <a href="/Exhibition/Exhibiton.html" style="text-decoration: none; color: inherit;"><div style="cursor: pointer;">Exhibition</div></a>
+        <a href="/contact.html" style="text-decoration: none; color: inherit;"><div style="cursor: pointer;">Contact</div></a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="header-spacer" aria-hidden="true"></div>
+
+  <h1 class="page-title">Solo Works</h1>
+
+  <main>
+    <section class="gallery" aria-label="Gallery">
+      <!-- Item 1 -->
+      <div class="thumb" onclick="openPopup(0)" role="button" tabindex="0">
+        <div class="thumb__box">
+          <img class="thumb__img" src="/images/01Thumb.png" alt="Thumbnail 01" draggable="false" oncontextmenu="return false">
+          <div class="thumb__overlay">Dominium Cras</div>
+        </div>
+      </div>
+
+      <!-- Item 2 -->
+      <div class="thumb" onclick="openPopup(1)" role="button" tabindex="0">
+        <div class="thumb__box">
+          <img class="thumb__img" src="/images/manic.png" alt="Thumbnail 02" draggable="false" oncontextmenu="return false">
+          <div class="thumb__overlay">2D</div>
+        </div>
+      </div>
+
+      <!-- Item 3 -->
+      <div class="thumb" onclick="openPopup(2)" role="button" tabindex="0">
+        <div class="thumb__box">
+          <video src="/images/03.mp4" class="thumb__img" autoplay muted loop playsinline draggable="false" oncontextmenu="return false"></video>
+          <div class="thumb__overlay">MOTION</div>
+        </div>
+      </div>
+
+      <!-- Item 4 -->
+      <div class="thumb" onclick="openPopup(3)" role="button" tabindex="0">
+        <div class="thumb__box">
+          <img class="thumb__img" src="/images/05Thumb.png" alt="Thumbnail 04" draggable="false" oncontextmenu="return false">
+          <div class="thumb__overlay">MIX MEDIA EXPLORATION</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Fullscreen Popup Gallery -->
+  <div id="popupGallery" onclick="closePopup(event)" role="dialog" aria-modal="true" aria-labelledby="popupTitle">
+    <div id="popupBox" onclick="event.stopPropagation()">
+
+      <h2 id="popupTitle"></h2>
+
+      <div id="popupContent" style="width: 100%; height: 80vh; max-height: calc(100vh - 180px); box-sizing: border-box;"></div>
+
+
+      <!-- Left Navigation Zone -->
+      <div class="popup-nav popup-nav--left" onclick="prevItem()" onmouseover="this.style.backgroundColor='rgba(255,255,255,0.05)'" onmouseout="this.style.backgroundColor='transparent'">
+        <div class="triangle-left" aria-hidden="true"></div>
+      </div>
+
+      <!-- Right Navigation Zone -->
+      <div class="popup-nav popup-nav--right" onclick="nextItem()" onmouseover="this.style.backgroundColor='rgba(255,255,255,0.05)'" onmouseout="this.style.backgroundColor='transparent'">
+        <div class="triangle-right" aria-hidden="true"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const galleryItems = [
+     {
+  title: "Dominium Cras",
+  content: `
+  <div style="width:100%;text-align:center;margin-bottom:12px;">
+      <div style="font-size:0.9em;color:#666;">Dominion of Tomorrow, 3D Full Character Rig and Render</div>
+    </div>
+    <div class="popup-hover-dominium" style="
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      box-sizing: border-box;
+      padding: 0 20px;
+    ">
+      <!-- Layout unit with fixed aspect ratio -->
+      <div style="
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        max-width: 1200px;
+        aspect-ratio: 2 / 1;
+        box-sizing: border-box;
+      ">
+        <!-- Left: Dominium1 -->
+        <div style="
+          flex: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding-right: 10px;
+        ">
+          <img src="/images/Dominium1.png"
+               style="width: 100%; height: 100%; object-fit: cover;" />
+        </div>
+
+        <!-- Right: 2x2 Grid -->
+        <div style="
+          flex: 1;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          grid-template-rows: 1fr 1fr;
+          gap: 0;
+          padding-left: 10px;
+        ">
+          <img src="/images/Dominium2.png" style="width: 100%; height: 100%; object-fit: cover;" />
+          <img src="/images/Dominium3.png" style="width: 100%; height: 100%; object-fit: cover;" />
+          <img src="/images/Dominium4.png" style="width: 100%; height: 100%; object-fit: cover;" />
+          <img src="/images/Dominium5.png" style="width: 100%; height: 100%; object-fit: cover;" />
+        </div>
+      </div>
+    </div>
+  `
+}
+
+
+,
+    {
+  title: "2D",
+  content: `
+    <div style="width:100%;text-align:center;margin-bottom:12px;">
+      <div style="font-size:0.9em;color:#666;">2D Character Design Illustrations</div>
+    </div>
+
+    <div class="popup-hover-2d" style="
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-sizing: border-box;
+      padding: 20px;
+    ">
+      <!-- Unified layout container -->
+      <div style="
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        max-width: 900px;
+        height: 90%;
+        box-sizing: border-box;
+      ">
+        <!-- Left: saint.png -->
+        <div style="
+          flex: 1;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        ">
+          <img src="/images/saint.png"
+               style="width: 100%;
+                      height: 100%;
+                      object-fit: contain;
+                      display: block;" />
+        </div>
+
+        <!-- Right: vertical stack -->
+        <div style="
+          aspect-ratio: 1 / 2;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          gap: 8px;
+        "> 
+          <img src="/images/manic2.png"
+               style="width: 100%;
+                      height: 50%;
+                      object-fit: cover;
+                      display: block;" />
+          <img src="/images/saryn2.png"
+               style="width: 100%;
+                      height: 50%;
+                      object-fit: cover;
+                      display: block;" />
+        </div>
+      </div>
+    </div>
+  `
+}
+
+
+
+,
+      {
+  title: "MOTION",
+  content: `
+  <div style="width:100%;text-align:center;margin-bottom:12px;">
+      <div style="font-size:0.9em;color:#666;">Animated Motion Graphics Mix Media</div>
+    </div>
+    <div style="
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-sizing: border-box;
+    ">
+      <!-- Unified layout container -->
+      <div style="
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        height: 90%;
+        max-height: 640px;
+        box-sizing: border-box;
+      ">
+        <!-- Left: 03.mp4 (square) -->
+        <div style="
+          aspect-ratio: 1 / 1;
+          height: 100%;
+          overflow: hidden;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        ">
+          <video
+            src="/images/03.mp4"
+            muted
+            loop
+            playsinline
+            style="
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+              pointer-events: auto;
+            "
+            onmouseover="this.play()"
+            onmouseout="this.pause()"
+          ></video>
+        </div>
+
+        <!-- Right: YouTube Short (vertical) -->
+        <div style="
+          aspect-ratio: 9 / 16;
+          height: 100%;
+          box-shadow: 0 0 20px rgba(0,0,0,0.5);
+          border-radius: 8px;
+          overflow: hidden;
+        ">
+          <iframe
+            width="100%"
+            height="100%"
+            src="https://www.youtube.com/embed/1ZrWYCOkaeE?autoplay=1&mute=1&loop=1&playlist=1ZrWYCOkaeE&rel=0&modestbranding=1"
+            title="YouTube Short"
+            frameborder="0"
+            allow="autoplay; encrypted-media"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </div>
+    </div>
+  `
+}
+,
+      {
+  title: "MIXED MEDIA EXPLORATION",
+  content: `
+  <div style="width:100%;text-align:center;margin-bottom:12px;">
+      <div style="font-size:0.9em;color:#666;">Various Mix Discepline Exploration, Mixing 2D, 3D, and Design Elements in Pipeline Design</div>
+    </div>
+    <div style="width:100%;height:100%;display:flex;justify-content:center;align-items:flex-start;padding:12px;box-sizing:border-box;overflow:visible; margin-top:60px;">
+
+      <div style="width:100%;max-width:1200px;box-sizing:border-box;">
+
+        <!-- ROW 1: untouched, four equal tiles side-by-side, no gaps -->
+        <div id="mm-row-1" style="display:flex;flex-direction:row;width:100%;height:260px;gap:0;margin:0;padding:0;box-sizing:border-box;align-items:stretch;">
+          <div style="flex:0 0 25%;height:100%;box-sizing:border-box;overflow:hidden;">
+            <img class="mm-img" src="/images/Demon.png" style="width:100%;height:100%;object-fit:cover;display:block;" />
+          </div>
+
+          <div style="flex:0 0 25%;height:100%;box-sizing:border-box;overflow:hidden;">
+            <img class="mm-img" src="/images/Demon2.jpg" style="width:100%;height:100%;object-fit:cover;display:block;" />
+          </div>
+
+          <div style="flex:0 0 25%;height:100%;box-sizing:border-box;overflow:hidden;">
+            <img class="mm-img" src="/images/Divine punishment.png" style="width:100%;height:100%;object-fit:cover;display:block;" />
+          </div>
+
+          <!-- Resilience fills its cell without side gaps -->
+          <div style="flex:0 0 25%;height:100%;box-sizing:border-box;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#000;">
+            <img class="mm-img" src="/images/Resilience.png" style="width:100%;height:100%;object-fit:cover;display:block;" />
+          </div>
+        </div>
+
+        <!-- ROW 2: independent from row 1; centered, two images same height, preserve ratios -->
+        <div id="mm-row-2" style="width:100%;box-sizing:border-box;display:flex;justify-content:center;margin-top:12px;">
+          <!-- bottomRowHeight controls the rendered height of both whale images -->
+          <div style="width:100%;max-width:1200px;display:flex;justify-content:center;box-sizing:border-box;">
+            <div style="display:flex;gap:12px;align-items:center;justify-content:center;width:100%;max-width:100%;height:320px;box-sizing:border-box;">
+              <!-- Both images set to identical height (100% of this container) and width:auto to preserve ratio -->
+              <img class="mm-img-bottom" src="/images/Sky_whale.png" style="height:100%;width:auto;object-fit:contain;display:block;max-width:calc(100% - 12px);" />
+              <img class="mm-img-bottom" src="/images/Whale_preview.jpg" style="height:100%;width:auto;object-fit:contain;display:block;max-width:calc(100% - 12px);" />
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <style>
+        /* allow row1 tiles to show hover scale outside their cell and overlap neighbors */
+        #mm-row-1 > div { overflow: visible !important; }
+        #mm-row-1 .mm-img { display:block; transition: transform .28s ease, z-index 0s; transform-origin:center center; will-change: transform; }
+        #mm-row-1 .mm-img:hover { transform: scale(1.16); position: relative; z-index: 50; }
+
+        /* top-row hover scale fallback for non-row-1 usage */
+        .mm-img { display:block; transition: transform .28s ease; transform-origin:center center; }
+        .mm-img:hover { transform: scale(1.16); }
+
+        /* bottom-row hover scale (keeps height fixed) */
+        .mm-img-bottom { transition: transform .28s ease; transform-origin:center center; }
+        .mm-img-bottom:hover { transform: scale(1.16); }
+
+        /* ensure the bottom row images never exceed the viewport on short screens */
+        @media (max-height:720px) {
+          #mm-row-2 > div > div { height: calc(100vh / 3); } /* reduces bottom row height on short viewports */
+        }
+      </style>
+    </div>
+  `
+}
+
+
+
+    ];
+
+    let currentIndex = 0;
+
+    function openPopup(index) {
+      currentIndex = index;
+      updatePopup();
+      document.getElementById('popupGallery').style.display = 'flex';
+    }
+
+    function updatePopup() {
+      document.getElementById('popupTitle').innerText = galleryItems[currentIndex].title;
+      document.getElementById('popupContent').innerHTML = galleryItems[currentIndex].content;
+    }
+
+    function closePopup(event) {
+      const popupBox = document.getElementById('popupBox');
+      if (!popupBox.contains(event.target)) {
+        document.getElementById('popupGallery').style.display = 'none';
+      }
+    }
+
+    function prevItem() {
+      currentIndex = (currentIndex - 1 + galleryItems.length) % galleryItems.length;
+      updatePopup();
+    }
+
+    function nextItem() {
+      currentIndex = (currentIndex + 1) % galleryItems.length;
+      updatePopup();
+    }
+  </script>
+</body>
+<footer style="margin: 18vh 0 5vh 0; text-align: center; font-size: 12px; font-weight: 300; color: #aaa;">
+  © 2025 Hao.X_Art All images and content are the property of the artist. Unauthorized use or reproduction of any artwork or content is prohibited.
+</footer>
+</html>

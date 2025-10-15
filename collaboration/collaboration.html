@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Hao.X Gallery</title>
+  <script>
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+    });
+  </script>
+  <style>
+    .thumb:hover {
+    opacity: 0.6;
+    transition: opacity 0.3s ease;
+    }
+
+    body {
+      margin: 0;
+      background-color: black;
+      font-family: sans-serif;
+      color: white;
+      height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* === Fixed Header === */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: black;
+      z-index: 1000;
+      padding: 20px 0;
+    }
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-left: 13.9%;
+      margin-right: 13.9%;
+    }
+
+    .header-content a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 50px;
+    }
+
+    /* === Movable Container === */
+    .gallery-container {
+      position: absolute;
+      top: 150px;
+      left: 90%;
+      transform: translateX(-50%);
+    }
+        .content-body {
+    position: relative;
+    padding: 40px;
+    z-index: 5;
+    color: white;
+    font-size: 18px;
+    line-height: 1.6;
+    }
+
+    .content-body img,
+    .content-body iframe {
+    margin-top: 20px;
+    max-width: 100%;
+    display: block;
+    }
+
+    .canvas {
+      position: relative;
+      width: 620px;
+      height: 700px;
+    }
+
+    .block {
+      position: absolute;
+      top: 0;
+      display: flex;
+      height: 100%;
+      transition: transform 0.6s ease;
+    }
+
+    .thumb {
+      width: 100px;
+      height: 100%;
+      background-color: white;
+      cursor: pointer;
+    }
+
+    .content {
+      position: relative;
+      height: 100%;
+    }
+
+    .dim {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: black;
+      opacity: 1;
+      transition: opacity 0.6s ease;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    /* Block 1 */
+    #block1 {
+      left: 0;
+      z-index: 1;
+    }
+
+    #block1 .content {
+      width: 1280px;
+      background-color: rgb(0, 0, 0);
+    }
+
+    /* Block 2 */
+    #block2 {
+      left: 140px;
+      z-index: 2;
+    }
+
+    #block2 .content {
+      width: 1280px;
+      background-color: rgb(0, 0, 0);
+    }
+
+    /* Block 3 */
+    #block3 {
+      left: 280px;
+      z-index: 10;
+    }
+
+    #block3 .content {
+      width: 1240px;
+      background-color: rgb(0, 0, 0);
+    }
+
+    /* Slide classes */
+    .slide1 {
+      transform: translateX(-1200px);
+    }
+
+    .slide2 {
+      transform: translateX(-1240px);
+    }
+
+    .slide3 {
+      transform: translateX(-1280px);
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <div class="header">
+    <div class="header-content">
+      <a href="/homePage.html">
+        <div style="font-size: 32px; font-weight: bold;">Hao.X Art</div>
+      </a>
+      <div class="nav-links">
+        <a href="/solo/solo.html"><div style="cursor: pointer;">Solo</div></a>
+        <a href="/collaboration/collaboration.html"><div style="cursor: pointer;">Collaborations</div></a>
+        <a href="/Exhibition/Exhibiton.html" style="text-decoration: none; color: inherit;"><div style="cursor: pointer;">Exhibition</div></a>
+        <a href="/contact.html" style="text-decoration: none; color: inherit;"><div style="cursor: pointer;">Contact</div></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Spacer to offset fixed header -->
+  <div style="height: 80px;"></div>
+  <!-- Crow Image Behind Everything -->
+<img src="/images/crow.png" alt="Crow" style="
+  position: fixed;
+  top: 50%;
+  left: 7%;
+  transform: translateY(-50%);
+  z-index: 0;
+  height: 600px;
+  opacity: 1;
+  pointer-events: none;
+" />
+<div style="height: 700px;"></div> <!-- Spacer to match crow height -->
+
+<footer style="
+  position: relative;
+  z-index: -10;
+  width: 100%;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 300;
+  color: #aaa;
+  padding: 40px 0;
+  background-color: black;
+">
+  © 2025 Hao.X_Art — All images and content are the property of the artist. Unauthorized use or reproduction is prohibited.
+</footer>
+
+<!-- Sample Text Block Next to Crow -->
+<div style="
+  position: fixed;
+  top: 50%;
+  left: 35%;
+  transform: translateY(-50%);
+  width: 400px;
+  color: white;
+  z-index: 0;
+  font-family: sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+">
+  <h2 style="margin-bottom: 10px;"></h2>
+  <p>
+   Hao prides himself on strong adaptibility and flexibility. With an ever expanding skill set, Hao is capable of collaboration
+   in any creative settings. 
+  </p>
+</div>
+
+  <!-- Gallery -->
+  <div class="gallery-container">
+    <div class="canvas">
+
+<!-- Block 1 -->
+<div class="block" id="block1">
+  <div class="thumb" onclick="toggleSlide(1)">
+    <img src="/images/CollabThumb1.png" alt="Collab Thumb 1" style="width: 100px; height: 700px; display: block;" />
+  </div>
+
+  <div class="content" id="content1">
+    <div class="dim" id="dim1"></div>
+
+    <div class="content-body block1">
+      <style>
+        .content-body.block1 {
+          display: flex;
+          flex-direction: row;
+          gap: 20px;
+          align-items: flex-start;
+        }
+
+        .content-body.block1 .left-section {
+          flex: 1;
+          padding-right: 10px;
+        }
+
+        .content-body.block1 .right-section {
+          width: 600px;
+          position: relative;
+          left: -100px;
+        }
+
+        .content-body.block1 .link-buttons {
+          margin: 10px 0;
+        }
+
+        .content-body.block1 .link-buttons a {
+          display: inline-block;
+          margin-right: 10px;
+          padding: 8px 16px;
+          background-color: #333;
+          color: #fff;
+          text-decoration: none;
+          border-radius: 4px;
+          font-weight: bold;
+          transition: background-color 0.3s ease;
+        }
+
+        .content-body.block1 .link-buttons a:hover {
+          background-color: #555;
+        }
+
+        .content-body.block1 .project-description {
+          margin-top: 15px;
+          font-size: 16px;
+          line-height: 1.6;
+          max-width: 400px;
+        }
+
+        .content-body.block1 .right-section img {
+          position: relative;
+          z-index: 2;
+          transition: transform 0.4s ease;
+        }
+
+        .content-body.block1 .right-section img:hover {
+          transform: scale(1.2);
+        }
+      </style>
+
+      <!-- Left Section: Title, Subtitle, Buttons, Description -->
+      <div class="left-section">
+        <h2>Looking Behind</h2>
+        <p>In collaboration with Elise Battelle</p>
+
+        <div class="link-buttons">
+          <a href="https://clarinet-bellflower-69xc.squarespace.com/general-5" target="_blank">Website</a>
+          <a href="https://www.instagram.com/elise_animates/" target="_blank">Instagram</a>
+        </div>
+
+        <div class="project-description">
+          <p>
+            "Looking Behind” is a mixed-media video exploration combining real footage via green screen with a 3D animated environment. Using AI-generated depth mapping, lighting along with screen space depth can be controlled independently in 3D space. This allows for easy, 
+            effective integration of footage with CGI.<br><br>
+           Beyond the technical exploration, this collaboration is also an experiment in speed, quality, and blending different skill sets at different levels. The goal is to create a 
+           beautiful fantasy scenery with seamless harmony.
+          </p>
+        </div>
+      </div>
+
+      <!-- Right Section: Video and Image -->
+      <div class="right-section">
+        <iframe width="100%" height="280" src="https://www.youtube.com/embed/pC1VWeOFLFc?si=yzw4ylJaFnhjZ37i"
+          title="YouTube video player" frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+        <img src="/images/Looking.png" alt="Sample Image"
+          style="max-width: 100%; height: auto; left: 00px; top: -20px;" />
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Block 2 -->
+<div class="block" id="block2">
+  <div class="thumb" onclick="toggleSlide(2)">
+    <img src="/images/CollabThumb2.png" alt="Collab Thumb 2" style="width: 100px; height: 700px; display: block;" />
+  </div>
+
+  <div class="content" id="content2">
+    <div class="dim" id="dim2"></div>
+
+    <div class="content-body block2">
+      <style>
+        .content-body.block2 {
+          display: flex;
+          flex-direction: row;
+          gap: 20px;
+          align-items: flex-start;
+        }
+
+        .content-body.block2 .left-section {
+          flex: 1;
+          padding-right: 10px;
+        }
+
+        .content-body.block2 .right-section {
+          width: 600px;
+          position: relative;
+          left: -100px;
+        }
+
+        .content-body.block2 .link-buttons {
+          margin: 10px 0;
+        }
+
+        .content-body.block2 .link-buttons a {
+          display: inline-block;
+          padding: 8px 16px;
+          background-color: #333;
+          color: #fff;
+          text-decoration: none;
+          border-radius: 4px;
+          font-weight: bold;
+          transition: background-color 0.3s ease;
+        }
+
+        .content-body.block2 .link-buttons a:hover {
+          background-color: #555;
+        }
+
+        .content-body.block2 .project-description {
+          margin-top: 15px;
+          font-size: 16px;
+          line-height: 1.6;
+          max-width: 400px;
+        }
+
+        .content-body.block2 .right-section img {
+          position: relative;
+          z-index: 2;
+          transition: transform 0.4s ease;
+        }
+
+        .content-body.block2 .right-section img:hover {
+          transform: scale(1.2);
+        }
+      </style>
+
+      <!-- Left Section: Title, Subtitle, Button, Description -->
+      <div class="left-section">
+        <h2>Walk</h2>
+        <p>In collaboration with Grimnoirz</p>
+
+        <div class="link-buttons">
+          <a href="https://www.instagram.com/grimnoirz/" target="_blank">Instagram</a>
+        </div>
+
+        <div class="project-description">
+          <p>
+            This project continues the exploration of combining real footage with a digital enviroment, focusing on speed. This project
+            involves more usage of After Effects while combining 2D and 3D animated elements in Blender. The total time spent aside from footage capture
+            is three days.<br><br>
+            This project was fun. Mutual interest in theme and music quickened decision making and allowed us to blitz through in no time at all.
+            In hindsight, team synergy will always be more important than technical effiency and I am grateful that this lesson was taught to me in the right way.
+          </p>
+        </div>
+      </div>
+
+      <!-- Right Section: Video and Image -->
+      <div class="right-section">
+        <iframe width="100%" height="280" src="https://www.youtube.com/embed/c30Iecv3A0w?si=1WoWio1h3jUvYCgV"
+          title="YouTube video player" frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+        <img src="/images/Grim.png" alt="Placeholder Image"
+          style="width: 100%; height: auto; left: 0px; top: -20px;" />
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Block 3 -->
+<div class="block" id="block3">
+  <div class="thumb" onclick="toggleSlide(3)">
+    <img src="/images/CollabThumb3.jpg" alt="Collab Thumb 3" style="width: 100px; height: 700px; display: block;" />
+  </div>
+
+  <div class="content" id="content3">
+    <div class="dim" id="dim3"></div>
+
+    <div class="content-body block3">
+      <style>
+        .content-body.block3 {
+          display: flex;
+          flex-direction: row;
+          gap: 20px;
+          align-items: flex-start;
+        }
+
+        .content-body.block3 .left-section {
+          flex: 1;
+          padding-right: 10px;
+        }
+
+        .content-body.block3 .right-section {
+          width: 600px;
+          position: relative;
+          left: -100px;
+        }
+
+        .content-body.block3 .link-buttons {
+          margin: 10px 0;
+        }
+
+        .content-body.block3 .link-buttons a {
+          display: inline-block;
+          padding: 8px 16px;
+          background-color: #333;
+          color: #fff;
+          text-decoration: none;
+          border-radius: 4px;
+          font-weight: bold;
+          transition: background-color 0.3s ease;
+        }
+
+        .content-body.block3 .link-buttons a:hover {
+          background-color: #555;
+        }
+
+        .content-body.block3 .project-description {
+          margin-top: 15px;
+          font-size: 16px;
+          line-height: 1.6;
+          max-width: 400px;
+        }
+
+        .content-body.block3 .right-section img {
+          position: relative;
+          z-index: 2;
+          transition: transform 0.4s ease;
+        }
+
+        .content-body.block3 .right-section img:hover {
+          transform: scale(1.2);
+        }
+
+        .content-body.block3 .left-section .extra-image {
+          margin-top: 20px;
+          max-width: 100%;
+          height: auto;
+          position: relative;
+          z-index: 2;
+          transition: transform 0.4s ease;
+        }
+
+        .content-body.block3 .left-section .extra-image:hover {
+          transform: scale(4);
+        }
+      </style>
+
+      <!-- Left Section: Title, Subtitle, Button, Description, Extra Image -->
+      <div class="left-section">
+        <h2>Light Box</h2>
+        <p>In collaboration with SJSU CADRE Club</p>
+
+        <div class="link-buttons">
+          <a href="https://www.instagram.com/cadre.so/" target="_blank">Instagram</a>
+        </div>
+
+        <div class="project-description">
+          <p>
+            This is my contribution to an ongoing lightbox project produced by the CADRE club at San Jose State University.<br><br>
+            This is a multi-layered light box where each layer is created by laser cutting a design made in Adobe Illustrator. The layers are then placed in a hand made box with soldered lights.
+          </p>
+        </div>
+
+        <img src="/images/Lightbox_1.jpg" alt="Additional Lightbox Detail" class="extra-image" 
+        style="width: 30%; object-fit: cover; left: 0px; top: -20px;" />
+      </div>
+
+      <!-- Right Section: Tall Image Only -->
+      <div class="right-section">
+        <img src="/images/Lightbox_2.jpg" alt="Tall Artwork"
+          style="width: 100%; height: 700px; object-fit: cover; left: 0px; top: -20px;" />
+      </div>
+    </div>
+  </div>
+  </div>
+
+
+
+  <script>
+  const blockStatus = {
+    1: 'closed',
+    2: 'closed',
+    3: 'closed'
+  };
+
+  function updateDim() {
+    for (let i = 1; i <= 3; i++) {
+      const dim = document.getElementById(`dim${i}`);
+      dim.style.opacity = blockStatus[i] === 'open' ? '0' : '1';
+    }
+  }
+
+  function toggleSlide(index) {
+  const blocks = {
+    1: document.getElementById('block1'),
+    2: document.getElementById('block2'),
+    3: document.getElementById('block3')
+  };
+
+  // Check if clicked block is already open and others are closed
+  const othersClosed = Object.entries(blockStatus)
+    .filter(([key]) => parseInt(key) !== index)
+    .every(([, status]) => status === 'closed');
+
+  if (blockStatus[index] === 'open' && othersClosed) {
+    // Close the block
+    blocks[index].classList.remove(`slide${index}`);
+    blockStatus[index] = 'closed';
+  } else {
+    // Reset all slide classes
+    for (let i = 1; i <= 3; i++) {
+      blocks[i].classList.remove(`slide${i}`);
+    }
+
+    // Set clicked block to open
+    blockStatus[index] = 'open';
+    blocks[index].classList.add(`slide${index}`);
+
+    // Set preceding blocks to hidden
+    for (let i = 1; i < index; i++) {
+      blockStatus[i] = 'hidden';
+      blocks[i].classList.add(`slide${i}`);
+    }
+
+    // Set following blocks to closed
+    for (let i = index + 1; i <= 3; i++) {
+      blockStatus[i] = 'closed';
+    }
+  }
+
+  updateDim();
+}
+
+</script>
+
+</body>
+
+
+
+
+
+</html>

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Hao.X Works</title>
+
+  <!-- ===================== GLOBAL STYLES ===================== -->
+  <style>
+    /* ✧ Background star layer */
+    #star-layer {
+       position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity 0.6s ease-out;
+    }
+
+    /* ✧ Star appearance and animation */
+    .star {
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      pointer-events: none;
+      animation: shoot 9s ease-out forwards;
+      clip-path: polygon(
+        50% 0%,
+        60% 40%,
+        100% 50%,
+        60% 60%,
+        50% 100%,
+        40% 60%,
+        0% 50%,
+        40% 40%
+      );
+    }
+
+    /* ✧ Star animation: fade in, drift, fade out */
+    @keyframes shoot {
+      0% {
+        opacity: 0;
+        transform: translate(0, 0) scale(0.5);
+      }
+      10% {
+        opacity: 1;
+        transform: translate(0, 0) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(var(--dx), var(--dy)) scale(1.5);
+      }
+    }
+  </style>
+
+  <!-- ===================== STAR SCRIPT ===================== -->
+  <script>
+    // ✧ Disable right-click
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+    });
+
+    // ✧ Ambient white star generator
+    function createWhiteStar() {
+      const star = document.createElement('div');
+      star.className = 'star';
+      star.style.background = 'white';
+
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+
+      const bias = 1 - Math.pow(Math.random(), 2);
+      const x = Math.random() * viewportWidth;
+      const y = viewportHeight * (0.7 + bias * 0.3);
+
+      star.style.left = x + 'px';
+      star.style.top = y + 'px';
+
+      const angle = Math.random() * 2 * Math.PI;
+      const distance = 40 + Math.random() * 40;
+      const dx = Math.cos(angle) * distance + 'px';
+      const dy = Math.sin(angle) * distance + 'px';
+
+      star.style.setProperty('--dx', dx);
+      star.style.setProperty('--dy', dy);
+
+      document.getElementById('star-layer').appendChild(star);
+      setTimeout(() => star.remove(), 9000);
+    }
+
+    // ✧ Spawn white stars continuously
+    setInterval(() => {
+      for (let i = 0; i < 16; i++) {
+        createWhiteStar();
+      }
+    }, 300);
+
+    // ✧ Colored star definitions
+    const colors = {
+      blue: '#12eeef',
+      purple: '#f9aeeb',
+      yellow: '#fac062'
+    };
+
+    const activeStars = {
+      blue: null,
+      purple: null,
+      yellow: null
+    };
+
+    // ✧ Spawn one star per color
+    function spawnColorStar(color) {
+      if (activeStars[color]) return;
+
+      const star = document.createElement('div');
+      star.className = 'star';
+      star.style.background = colors[color];
+
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+
+      const bias = 1 - Math.pow(Math.random(), 2);
+      const x = Math.random() * viewportWidth;
+      const y = viewportHeight * (0.8 + bias * 0.2);
+
+      star.style.left = x + 'px';
+      star.style.top = y + 'px';
+
+      const angle = Math.random() * 2 * Math.PI;
+      const distance = 40 + Math.random() * 40;
+      const dx = Math.cos(angle) * distance + 'px';
+      const dy = Math.sin(angle) * distance + 'px';
+
+      star.style.setProperty('--dx', dx);
+      star.style.setProperty('--dy', dy);
+
+      document.getElementById('star-layer').appendChild(star);
+      activeStars[color] = star;
+
+      setTimeout(() => {
+        star.remove();
+        activeStars[color] = null;
+      }, 9000);
+    }
+
+    // ✧ Maintain one of each colored star
+    setInterval(() => {
+      spawnColorStar('blue');
+      spawnColorStar('purple');
+      spawnColorStar('yellow');
+    }, 10);
+    
+  </script>
+  <script>
+  let whiteStarInterval = null;
+  let colorStarInterval = null;
+  let starsAreActive = false;
+
+  function startStars() {
+    if (starsAreActive) return;
+    starsAreActive = true;
+
+    whiteStarInterval = setInterval(() => {
+      for (let i = 0; i < 16; i++) createWhiteStar();
+    }, 300);
+
+    colorStarInterval = setInterval(() => {
+      spawnColorStar('blue');
+      spawnColorStar('purple');
+      spawnColorStar('yellow');
+    }, 10);
+
+    document.getElementById('star-layer').style.opacity = 1;
+  }
+
+  function stopStars() {
+    if (!starsAreActive) return;
+    starsAreActive = false;
+
+    clearInterval(whiteStarInterval);
+    clearInterval(colorStarInterval);
+    whiteStarInterval = null;
+    colorStarInterval = null;
+
+    document.getElementById('star-layer').style.opacity = 0;
+  }
+
+  window.addEventListener('scroll', () => {
+    if (window.scrollY === 0) {
+      startStars();
+    } else {
+      stopStars();
+    }
+  });
+  window.addEventListener('scroll', () => {
+  if (window.scrollY === 0) {
+    document.getElementById('star-layer').style.opacity = 1;
+  } else {
+    document.getElementById('star-layer').style.opacity = 0;
+  }
+});
+
+  window.addEventListener('DOMContentLoaded', startStars);
+</script>
+
+</head>
+
+<body style="margin: 0; background-color: black; color: white; font-family: sans-serif;">
+
+  <!-- ✧ Star Layer -->
+  <div id="star-layer"></div>
+
+  <!-- ✧ Fixed Header -->
+  <header style="position: fixed; top: 0; left: 0; width: 100%; background-color: black; z-index: 1000; padding: 20px 0;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-left: 13.9%; margin-right: 13.9%;">
+      <a href="index 2.0.html" style="text-decoration: none; color: inherit;">
+        <div style="font-size: 32px; font-weight: bold;">Hao.X Art</div>
+      </a>
+      <nav style="display: flex; gap: 50px;">
+        <a href="/solo/solo.html" style="text-decoration: none; color: inherit;"><div style="cursor: pointer;">Solo</div></a>
+        <a href="/collaboration/collaboration.html" style="text-decoration: none; color: inherit;"><div style="cursor: pointer;">Collaborations</div></a>
+        <a href="/Exhibition/Exhibiton.html" style="text-decoration: none; color: inherit;"><div style="cursor: pointer;">Exhibition</div></a>
+        <a href="/contact.html" style="text-decoration: none; color: inherit;"><div style="cursor: pointer;">Contact</div></a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ✧ Spacer -->
+  <div style="height: 80px;"></div>
+
+  <!-- ✧ Main Content: Left (Maw) + Right (Dreaming + About) -->
+  <main style="display: flex; gap: 50px; margin-left: 13.9%; margin-right: 13.9%; align-items: flex-start;">
+
+    <!-- ✧ Left Block: Intro + Maw -->
+<section style="margin-top: 20vh; width: 612px;">
+  <div style="display: flex; align-items: flex-end;">
+    <div style="font-size: 260px; line-height: 1;">浩</div>
+    <div style="font-size: 64px; line-height: 1; padding-bottom: 0px;">.X</div>
+  </div>
+  <div style="font-size: 120px; font-weight: 500; margin-top: 10px;">HAO</div>
+  <div style="font-size: 16px; font-weight: 300; margin-top: 8px;">Chinese-born multi media artist based in San Jose California.</div>
+  <div style="font-size: 16px; font-weight: 300; margin-top: 8px;">居住在加利福尼亚圣何塞的中国出生的多媒体艺术家.</div>
+  <div style="font-size: 16px; font-weight: 300; margin-top: 8px;">中国出身で、サンノゼ在住のデジタルメディアアーティスト.</div>
+
+  <!-- ✧ Down-pointing triangle -->
+  <div style="width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent; border-top: 12px solid white; margin-top: 30px;"></div>
+
+  <div style="margin-top: 21vh;">
+    <img src="images/Maw.png" alt="Maw artwork"
+         style="max-width: 612px; display: block; user-select: none; -webkit-user-drag: none; pointer-events: none;"
+         draggable="false">
+  </div>
+</section>
+
+    <!-- ✧ Right Block: Dreaming + About -->
+    <section style="margin-top: 5vh; flex: 1; max-width: 612px; display: flex; flex-direction: column; align-items: flex-start;" oncontextmenu="return false;">
+
+      <!-- ✧ Dreaming Image -->
+      <img src="images/Dreaming.png" alt="Dreaming artwork"
+           style="max-width: 612px; user-select: none; -webkit-user-drag: none; pointer-events: none; margin-bottom: 10vh;"
+           draggable="false">
+
+      <!-- ✧ About Header -->
+      <h2 style="font-size: 32px; font-weight: bold; margin-bottom: 20px;">About the Artist</h2>
+
+      <!-- ✧ Headshot -->
+      <img src="images/headshot.png" alt="Headshot"
+           style="width: 140px; height: auto; border-radius: 8px; object-fit: cover; margin-bottom: 40px;">
+
+      <!-- ✧ Two Columns -->
+      <div style="display: flex; gap: 50px; align-items: flex-start; width: 100%;">
+
+        <!-- ✧ Left Column: English Bio -->
+        <div style="flex: 1; min-width: 300px;">
+          <p style="font-size: 16px; font-weight: 300; line-height: 1.6;">
+            Hao is a 3D generalist, illustrator, and mixed media graphic designer who blends disciplines in pursuit of total creative freedom.
+            "If I want to make something, I can and will make that thing happen." 
+            Uninterested in chasing hollow dreams, Hao chooses to sculpt his reality with his own hands and vision. 
+            Whether that means mastering industry standards or forging entirely new paths, Hao can and will make it happen.
+            
+          </p>
+        </div>
+
+        <!-- ✧ Right Column: Chinese + Japanese stacked -->
+        <div style="flex: 1.5; max-width: 612px;">
+          <p style="font-size: 16px; font-weight: 300; line-height: 1.6; margin-bottom: 20px;">
+            浩是一位 3D 全能艺术家、插画师以及混合媒体平面设计师，他融合多种创作领域，追求真正的创作自由。 “我想做什么我就能做什么。” 浩 
+            不愿追逐空洞的梦想，而是选择用自己的双手和视野雕刻现实。 无论是掌握行业标准，还是开辟全新的道路，浩都能做到，也一定会做到。
+          </p>
+          <p style="font-size: 16px; font-weight: 300; line-height: 1.6;">
+            浩 は 3D ジェネラリスト、イラストレーター、そしてミックスメディアのグラフィックデザイナー。
+            創造の自由を追求するために、複数の分野を融合させている。 「何かを作りたいと思ったら、必ずそれを形にする。」 空虚な夢を追うことには興味がなく、浩
+            は自分の手とビジョンで現実を彫刻する道を選ぶ。
+            それが業界標準を極めることであれ、まったく新しい道を切り開くことであれ、浩はそれを実現できるし、必ず実現する。
+          </p>
+        </div>
+
+      </div>
+    </section>
+  </main>
+</body>
+<!-- ✧ Footer -->
+<!-- ✧ Footer -->
+<footer style="margin: 5vh 0 5vh 0; text-align: center; font-size: 12px; font-weight: 300; color: #aaa;">
+  © 2025 Hao.X_Art All images and content are the property of the artist. Unauthorized use or reproduction of any artwork or content is prohibited.
+</footer>
+
+
+
+</html>
