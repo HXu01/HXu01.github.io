@@ -476,67 +476,47 @@
       {
   title: "MIXED MEDIA EXPLORATION",
   content: `
-  <div style="width:100%;text-align:center;margin-bottom:12px;">
-      <div style="font-size:0.9em;color:#666;">Various Mix Discepline Exploration, Mixing 2D, 3D, and Design Elements in Pipeline Design</div>
-    </div>
-    <div style="width:100%;height:100%;display:flex;justify-content:center;align-items:flex-start;padding:12px;box-sizing:border-box;overflow:visible; margin-top:60px;">
+  <div style="text-align:center; margin-bottom:12px;">
+  <div style="font-size:0.9em; color:#666;">
+    Various Mix Discipline Exploration, Mixing 2D, 3D, and Design Elements in Pipeline Design
+  </div>
+</div>
 
-      <div style="width:100%;max-width:1200px;box-sizing:border-box;">
+<!-- Top row: 4 images side by side -->
+<div style="display:flex; gap:0; margin-top:60px;">
+  <img class="hover-img" src="/images/Demon.png" style="flex:1; height:260px; object-fit:cover;" />
+  <img class="hover-img" src="/images/Demon2.jpg" style="flex:1; height:260px; object-fit:cover;" />
+  <img class="hover-img" src="/images/Divine%20punishment.png" style="flex:1; height:260px; object-fit:cover;" />
+  <img class="hover-img" src="/images/Resilience.png" style="flex:1; height:260px; object-fit:cover;" />
+</div>
 
-        <!-- ROW 1: untouched, four equal tiles side-by-side, no gaps -->
-        <div id="mm-row-1" style="display:flex;flex-direction:row;width:100%;height:260px;gap:0;margin:0;padding:0;box-sizing:border-box;align-items:stretch;">
-          <div style="flex:0 0 25%;height:100%;box-sizing:border-box;overflow:hidden;">
-            <img class="mm-img" src="/images/DEMON.png" style="width:100%;height:100%;object-fit:cover;display:block;" />
-          </div>
+<!-- Bottom row: 2 centered images -->
+<div style="display:flex; justify-content:center; gap:12px; margin-top:12px; height:320px;">
+  <img class="hover-img-bottom" src="/images/Sky_whale.png" style="height:100%; width:auto; object-fit:contain;" />
+  <img class="hover-img-bottom" src="/images/Whale_preview.jpg" style="height:100%; width:auto; object-fit:contain;" />
+</div>
 
-          <div style="flex:0 0 25%;height:100%;box-sizing:border-box;overflow:hidden;">
-            <img class="mm-img" src="/images/DEMON2.jpg" style="width:100%;height:100%;object-fit:cover;display:block;" />
-          </div>
+<!-- Hover styles -->
+<style>
+  .hover-img {
+    transition: transform 0.28s ease;
+    transform-origin: center center;
+  }
+  .hover-img:hover {
+    transform: scale(1.16);
+    z-index: 10;
+    position: relative;
+  }
 
-          <div style="flex:0 0 25%;height:100%;box-sizing:border-box;overflow:hidden;">
-            <img class="mm-img" src="/images/Divine punishment.png" style="width:100%;height:100%;object-fit:cover;display:block;" />
-          </div>
+  .hover-img-bottom {
+    transition: transform 0.28s ease;
+    transform-origin: center center;
+  }
+  .hover-img-bottom:hover {
+    transform: scale(1.16);
+  }
+</style>
 
-          <!-- Resilience fills its cell without side gaps -->
-          <div style="flex:0 0 25%;height:100%;box-sizing:border-box;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#000;">
-            <img class="mm-img" src="/images/Resilience.png" style="width:100%;height:100%;object-fit:cover;display:block;" />
-          </div>
-        </div>
-
-        <!-- ROW 2: independent from row 1; centered, two images same height, preserve ratios -->
-        <div id="mm-row-2" style="width:100%;box-sizing:border-box;display:flex;justify-content:center;margin-top:12px;">
-          <!-- bottomRowHeight controls the rendered height of both whale images -->
-          <div style="width:100%;max-width:1200px;display:flex;justify-content:center;box-sizing:border-box;">
-            <div style="display:flex;gap:12px;align-items:center;justify-content:center;width:100%;max-width:100%;height:320px;box-sizing:border-box;">
-              <!-- Both images set to identical height (100% of this container) and width:auto to preserve ratio -->
-              <img class="mm-img-bottom" src="/images/Sky_whale.png" style="height:100%;width:auto;object-fit:contain;display:block;max-width:calc(100% - 12px);" />
-              <img class="mm-img-bottom" src="/images/Whale_preview.jpg" style="height:100%;width:auto;object-fit:contain;display:block;max-width:calc(100% - 12px);" />
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <style>
-        /* allow row1 tiles to show hover scale outside their cell and overlap neighbors */
-        #mm-row-1 > div { overflow: visible !important; }
-        #mm-row-1 .mm-img { display:block; transition: transform .28s ease, z-index 0s; transform-origin:center center; will-change: transform; }
-        #mm-row-1 .mm-img:hover { transform: scale(1.16); position: relative; z-index: 50; }
-
-        /* top-row hover scale fallback for non-row-1 usage */
-        .mm-img { display:block; transition: transform .28s ease; transform-origin:center center; }
-        .mm-img:hover { transform: scale(1.16); }
-
-        /* bottom-row hover scale (keeps height fixed) */
-        .mm-img-bottom { transition: transform .28s ease; transform-origin:center center; }
-        .mm-img-bottom:hover { transform: scale(1.16); }
-
-        /* ensure the bottom row images never exceed the viewport on short screens */
-        @media (max-height:720px) {
-          #mm-row-2 > div > div { height: calc(100vh / 3); } /* reduces bottom row height on short viewports */
-        }
-      </style>
-    </div>
   `
 }
 
