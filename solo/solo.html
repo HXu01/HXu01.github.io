@@ -476,32 +476,31 @@
       {
   title: "MIXED MEDIA EXPLORATION",
   content: `
-  <div style="text-align:center; margin-bottom:12px;">
-  <div style="font-size:0.9em; color:#666;">
-    Various Mix Discipline Exploration, Mixing 2D, 3D, and Design Elements in Pipeline Design
-  </div>
-</div>
-
-<!-- Top row: 4 images side by side -->
+  <!-- Top row: 4 images side by side -->
 <div style="display:flex; gap:0; margin-top:60px;">
-  <img class="hover-img" src="/images/DEMON.png" style="flex:1; height:260px; object-fit:cover;" />
-  <img class="hover-img" src="/images/DEMON2.jpg" style="flex:1; height:260px; object-fit:cover;" />
-  <img class="hover-img" src="/images/Divine.png" style="flex:1; height:260px; object-fit:cover;" />
-  <img class="hover-img" src="/images/Resilience.png" style="flex:1; height:260px; object-fit:cover;" />
+  <img class="hover-img" src="/images/DEMON.png" />
+  <img class="hover-img" src="/images/DEMON2.jpg" />
+  <img class="hover-img" src="/images/Divine.png" />
+  <img class="hover-img" src="/images/Resilience.png" />
 </div>
 
 <!-- Bottom row: 2 centered images -->
-<div style="display:flex; justify-content:center; gap:12px; margin-top:12px; height:320px;">
-  <img class="hover-img-bottom" src="/images/Sky.png" style="height:100%; width:auto; object-fit:contain;" />
-  <img class="hover-img-bottom" src="/images/Whale.jpg" style="height:100%; width:auto; object-fit:contain;" />
+<div style="display:flex; justify-content:center; gap:12px; margin-top:12px;">
+  <img class="hover-img-bottom" src="/images/Sky.png" />
+  <img class="hover-img-bottom" src="/images/Whale.jpg" />
 </div>
 
-<!-- Hover styles -->
+<!-- Hover styles and image sizing -->
 <style>
   .hover-img {
+    flex: 1;
+    max-height: 260px;
+    width: 100%;
+    object-fit: contain;
     transition: transform 0.28s ease;
     transform-origin: center center;
   }
+
   .hover-img:hover {
     transform: scale(1.16);
     z-index: 10;
@@ -509,13 +508,18 @@
   }
 
   .hover-img-bottom {
+    max-height: 320px;
+    width: auto;
+    object-fit: contain;
     transition: transform 0.28s ease;
     transform-origin: center center;
   }
+
   .hover-img-bottom:hover {
     transform: scale(1.16);
   }
 </style>
+
 
   `
 }
